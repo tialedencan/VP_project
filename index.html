@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vizualizacija podataka</title>
+    <!-- <script src="http://d3js.org/d3.v6.min.js" charset="utf-8"></script> -->
+    <!-- <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-cloud@2/latest/d3-cloud.min.js"></script> -->
+
+    <style>
+        .bar {
+            fill: steelblue;
+        }
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: white;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div id="chart"></div>
+    <div id="scatter"></div>
+    <div id="ingredients"></div>
+    
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="script.js"></script> 
+    <script src="scatter.js"></script> 
+    <script src="ingredients.js"></script> 
+    
+    
+    <!-- <div id="graphContainer"></div>
+    <script src="categorization.js"></script> -->
+
+</body>
+</html>
