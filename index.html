@@ -12,10 +12,23 @@
     <div class="row m-4">
         <div id="chart" class="col-5 mt-5"></div>
         <div class="col-1"></div>
-        <div id="ingredients" class="col-6 mt-5" ></div>
+        <div id="ingredients" class="col-6 mt-5" >
+            <div class="d-flex flex-row-reverse me-5">
+                <select id="selectBtnIng" ></select>
+            </div>
+            
+        </div>
     </div>
-    <div id="scatter" class="m-5"></div>
-
+    <div class="row m-4">
+        <div id="scatter" class="mt-5 col-8"></div>
+        <div class="col-3 mt-5 ms-2 col-2 mt-5 d-flex align-items-center">
+            <label for="selectBtnBrand">Brands:</label>
+            <select id="selectBtnBrand" ></select>
+            <label for="selectBtnSkinType">Skin type:</label>
+            <select id="selectBtnSkinType" ></select>
+        </div>
+        
+    </div>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="script.js"></script> 
     <script src="scatter.js"></script> 
