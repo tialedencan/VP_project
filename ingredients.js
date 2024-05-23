@@ -8,18 +8,37 @@ var svgIngredients = d3.select("#ingredients").append("svg")
     .append("g")
     .attr("transform","translate(" + margins.left + "," + margins.top + ")");
 
-
+const categoriesColor = [
+    { name: 'Cleanser', color: '#78C6F7' }, // Light Blue
+    { name: 'Eye cream', color: '#800080' }, // Purple
+    { name: 'Face Mask', color: '#008000' }, // Green
+    { name: 'Moisturizer', color: '#8367C7' }, // Light Purple
+    { name: 'Sun protect', color: '#D4B400' }, // Gold
+    { name: 'Treatment', color: '#949494' } // Gray
+];
+   
     fetch('cosmetics.json')
     .then(response => response.json())
     .then(data => {
-       
-        // Count ingredients by category
+       const categories = ['Cleanser', 'Eye cream', 'Face Mask', 'Moisturizer','Sun protect','Treatment',];
+
+        // add the options to the button
+        d3.select("#selectBtnIng")
+        .selectAll('myOptions')
+            .data(categories)
+        .enter()
+            .append('option')
+        .text(function (d) { return d; }) // text showed in the menu
+        .attr("value", function (d) { return d; }) // corresponding value returned by the button
+        
+      // Count ingredients by category
         let ingredientCounts = countIngredientsByCategory(data);
         console.log(ingredientCounts);
 
         // Find the top 5 ingredients for each category
         let topIngredientsPerCategory = top5Ingredients(ingredientCounts);
         console.log(topIngredientsPerCategory)
+
         // Print the top 5 ingredients for each category
         for (let category in topIngredientsPerCategory) {
             //console.log(`Top 5 Ingredients for ${category}:`);
@@ -51,105 +70,17 @@ var svgIngredients = d3.select("#ingredients").append("svg")
             })
         }
         
+        drawIngredientsBarChart('Cleanser', topIngredientsPerCategoryArrays);
 
-        //set x and y scales
-
-        const x = d3.scaleLinear()
-        .domain([0, d3.max(topIngredientsPerCategoryArrays.Cleanser, d => d.count)]) //domena vrijednosti je od 0 do najvece vrijednosti
-        .range([0, width]); //širina px gdje ce biti vizualizacija
-
-       const y = d3.scaleBand() //horizontal barchart
-       //.domain([0, d3.max(topIngredientsPerCategory, d => d[0].ingredient)]) 
-        .domain( topIngredientsPerCategoryArrays.Cleanser.map(function(d) {return d.ingredient;})) //Cleanser
-        .padding(0.1)
-        .range([ height, 0]);
+        // When the button is changed, run the update function
+        d3.select("#selectBtnIng").on("change", function(d) {
         
-        //create the x and y axes
+            svgIngredients.selectAll("*").remove();
 
-        const xAxis = d3.axisBottom(x)
-        .ticks(5)
-        .tickSize(0); //remove ticks
-
-        const yAxis = d3. axisLeft(y)
-        .tickSize(0)
-        .tickPadding(10);
-
-        //Add vertical gridlines
-        svgIngredients.selectAll("line.vertical-grid")
-        .data(x.ticks(5))
-        .enter()
-        .append("line")
-        .attr("class", "vertical-grid")
-        .attr("x1", function(d) { return x(d);}) //x1,x2,y1,y2 = find beginning and end points of lines
-        .attr("y1", 0)
-        .attr("x2", function(d) { return x(d);})
-        .attr("y2", height)
-        .style("stroke", "gray")
-        .style("stroke-width", 0.5)
-        .style("stroke-dasharray", "3 3");
-
-
-        //create the bars for the chart
-
-        svgIngredients.selectAll(".bar")
-        .data(topIngredientsPerCategoryArrays.Cleanser)
-        .enter().append("rect")
-        .attr("class", "bar")
-        .attr("y", function(d) { return y(d.ingredient);})
-        .attr("height", y.bandwidth())
-        .attr("x", 0)
-        .attr("width", function(d) {return x(d.count);})
-        .style("fill", '#78C6F7');
-
-        //add the x and y axes to the chart
-
-        svgIngredients.append("g")
-        .attr("class", "x axis")
-        .style("font-size", "10px")
-        .attr ("transform","translate(0,"+height+")") //pomice x os od gore (udalji)
-        .call(xAxis)
-        .call(g => g.select(".domain").remove());
-
-        svgIngredients.append("g")
-        .attr("class", "y axis")
-        .style("font-size", "8px")
-        .call(yAxis)
-        .selectAll('path')
-        .style("stroke-width", '1.75px');
-
-        svgIngredients.selectAll(".y.axis .tick text")
-        .text(function(d) {
-            return d.toUpperCase();
-        });
-      
-        svgIngredients.selectAll(".label")
-        .data(topIngredientsPerCategoryArrays.Cleanser)
-        .enter().append("text")
-        .attr("x", function(d) { return x(d.count) + 5;})
-        .attr("y", function(d) { return y(d.ingredient) + y.bandwidth()/2;}) //podijeli s dva da se centrira
-        .attr("dy", ".35em")
-        .style("font-family", "sans-serif")
-        .style("font-size", "10px")
-        .style("font-weight", "bold")
-        .style("fill", "#3c3d28")
-        .text(function(d) { return d.count;});
-
-        svgIngredients.append("text")
-        .attr ("transform","translate("+ width/2 + "," + (height+margins.bottom / 2) +")") 
-        .style("text-anchor", "middle")
-        .style("font-size", "10px")
-        .style("fill", "black")
-        .style("font-family", "sans-serif")
-        .attr("dy", "1em")
-        .text("Total");
-
-        svgIngredients.append("text")
-        .attr ("x",margins.left - 335) 
-        .attr ("y",margins.top - 110) 
-        .style("font-size", "14px")
-        .style("font-weight", "bold")
-        .style("font-family", "sans-serif")
-        .text("Top 5 used ingredients in cleansers");
+            var selectedOption = d3.select(this).property("value")
+            // run the update function with this selected option
+            update(selectedOption, topIngredientsPerCategoryArrays)
+        })
 
     })
     .catch(error => console.error('Error:', error));
@@ -192,5 +123,107 @@ function top5Ingredients(ingredientCounts) {
     return topIngredients;
 }
 
+function update(selectedCategory, data) {  
+   drawIngredientsBarChart(selectedCategory,data);
+}
 
+function drawIngredientsBarChart(category, data) {
+    const x = d3.scaleLinear()
+    .domain([0, d3.max(data[category], d => d.count)]) //domena vrijednosti je od 0 do najvece vrijednosti
+    .range([0, width]); //širina px gdje ce biti vizualizacija
+
+   const y = d3.scaleBand() //horizontal barchart
+   //.domain([0, d3.max(topIngredientsPerCategory, d => d[0].ingredient)]) 
+    .domain( data[category].map(function(d) {return d.ingredient;})) //Cleanser
+    .padding(0.1)
+    .range([ height, 0]);
+    
+    //create the x and y axes
+
+    const xAxis = d3.axisBottom(x)
+    .ticks(5)
+    .tickSize(0); //remove ticks
+
+    const yAxis = d3. axisLeft(y)
+    .tickSize(0)
+    .tickPadding(10);
+
+    //Add vertical gridlines
+    svgIngredients.selectAll("line.vertical-grid")
+    .data(x.ticks(5))
+    .enter()
+    .append("line")
+    .attr("class", "vertical-grid")
+    .attr("x1", function(d) { return x(d);}) //x1,x2,y1,y2 = find beginning and end points of lines
+    .attr("y1", 0)
+    .attr("x2", function(d) { return x(d);})
+    .attr("y2", height)
+    .style("stroke", "gray")
+    .style("stroke-width", 0.5)
+    .style("stroke-dasharray", "3 3");
+
+
+    const colorForCategory = categoriesColor.find(categoryC => categoryC.name === category);
+    //create the bars for the chart
+    
+    svgIngredients.selectAll(".bar")
+    .data(data[category])
+    .enter().append("rect")
+    .attr("class", "bar")
+    .attr("y", function(d) { return y(d.ingredient);})
+    .attr("height", y.bandwidth())
+    .attr("x", 0)
+    .attr("width", function(d) {return x(d.count);})
+    .style("fill", colorForCategory.color);
+
+    //add the x and y axes to the chart
+
+    svgIngredients.append("g")
+    .attr("class", "x axis")
+    .style("font-size", "10px")
+    .attr ("transform","translate(0,"+height+")") //pomice x os od gore (udalji)
+    .call(xAxis)
+    .call(g => g.select(".domain").remove());
+
+    svgIngredients.append("g")
+    .attr("class", "y axis")
+    .style("font-size", "8px")
+    .call(yAxis)
+    .selectAll('path')
+    .style("stroke-width", '1.75px');
+
+    svgIngredients.selectAll(".y.axis .tick text")
+    .text(function(d) {
+        return d.toUpperCase();
+    });
+  
+    svgIngredients.selectAll(".label")
+    .data(data[category])
+    .enter().append("text")
+    .attr("x", function(d) { return x(d.count) + 5;})
+    .attr("y", function(d) { return y(d.ingredient) + y.bandwidth()/2;}) //podijeli s dva da se centrira
+    .attr("dy", ".35em")
+    .style("font-family", "sans-serif")
+    .style("font-size", "10px")
+    .style("font-weight", "bold")
+    .style("fill", "#3c3d28")
+    .text(function(d) { return d.count;});
+
+    svgIngredients.append("text")
+    .attr ("transform","translate("+ width/2 + "," + (height+margins.bottom / 2) +")") 
+    .style("text-anchor", "middle")
+    .style("font-size", "10px")
+    .style("fill", "black")
+    .style("font-family", "sans-serif")
+    .attr("dy", "1em")
+    .text("Total");
+
+    svgIngredients.append("text")
+    .attr ("x",margins.left - 335) 
+    .attr ("y",margins.top - 110) 
+    .style("font-size", "14px")
+    .style("font-weight", "bold")
+    .style("font-family", "sans-serif")
+    .text(`Top 5 used ingredients in ${category}s`);
+}
 
