@@ -17,3 +17,31 @@ h1, h5, label, #selectBtnIng, #selectBtnBrand, #selectBtnSkinType {
     opacity: 0;
     pointer-events: none;
 }
+
+#legend {
+    display: flex;
+    flex-direction: column;
+    max-width: 50%;
+    margin-top: 50px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: start;
+    margin-bottom: 8px;
+}
+
+.legend-rect {
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+}
+
+.legend-item p {
+    margin: 0;
+    /* Remove default margin */
+}
+
+.crossed-out {
+    text-decoration: line-through;
+}
