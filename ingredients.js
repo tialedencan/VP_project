@@ -187,7 +187,7 @@ function drawIngredientsBarChart(category, data) {
 
     svgIngredients.append("g")
     .attr("class", "y axis")
-    .style("font-size", "8px")
+    .style("font-size", "10px")
     .call(yAxis)
     .selectAll('path')
     .style("stroke-width", '1.75px');
@@ -212,18 +212,18 @@ function drawIngredientsBarChart(category, data) {
     svgIngredients.append("text")
     .attr ("transform","translate("+ width/2 + "," + (height+margins.bottom / 2) +")") 
     .style("text-anchor", "middle")
-    .style("font-size", "10px")
+    .style("font-size", "12px")
     .style("fill", "black")
-    .style("font-family", "sans-serif")
+    .style("font-family", "Libre Baskerville,serif")
     .attr("dy", "1em")
-    .text("Total");
+    .text("Number of products");
 
     svgIngredients.append("text")
     .attr ("x",margins.left - 335) 
     .attr ("y",margins.top - 110) 
     .style("font-size", "14px")
     .style("font-weight", "bold")
-    .style("font-family", "sans-serif")
+    .style("font-family", "Libre Baskerville,serif")
     .text(`Top 5 used ingredients in ${category}s`);
 }
 

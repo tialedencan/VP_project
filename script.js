@@ -13,9 +13,6 @@ fetch('cosmetics.json')
     .then(data => {
         //console.log(data);
         
-        const brands = calculateNumberOfProductsPerBrand(data);
-        console.log(brands);
-
         averagePrices = calculateAveragePrice(data);
         console.log(averagePrices);
 
@@ -125,9 +122,7 @@ function renderChart(averagePrice) {
      const colorScale = d3.scaleOrdinal()
         .domain(dataArray.map(item => item.category))
         .range(["#949494","#8367C7","#800080",   "#D4B400",   "#008000","#78C6F7"]); 
-        //.range(["#8367C7","#78C6F7", "#949494", "#008000",  "#800080", "#D4B400"]); 
-    
-    //const colorScale = d3.scaleOrdinal(categories.map(category => category.name), categories.map(category => category.color));
+        
 
      const svg = d3.select("#chart")
      .append("svg")
@@ -172,7 +167,7 @@ function renderChart(averagePrice) {
     
      .on("mouseover", function(d) {
         const productCategory = d[0];
-        const productInfo = d[1];//averagePrices[productCategory];
+        const productInfo = d[1];
         tooltip.transition().duration(50).style("opacity", 1);
         tooltip.html(`<strong>${productCategory}: ${Math.round(productInfo.average)}</strong>`)
         .style("left", (d3.event.pageX + 10) + "px")
@@ -187,11 +182,13 @@ function renderChart(averagePrice) {
 
      // Add x-axis
      svg.append("g")
+     .attr("class", "x axis")
      .attr("transform", "translate(0," + height + ")")
-     .call(d3.axisBottom(xScale).tickSizeOuter(0));
+     .call(d3.axisBottom(xScale).tickSizeOuter(0).tickSize(0));
 
      // Add y-axis
      svg.append("g")
+     .attr("class", "y axis")
      .call(d3.axisLeft(yScale).ticks(10).tickSizeInner(0).tickSizeOuter(0).tickPadding(15).tickFormat(d3.format(".2s")));
 
      // Add title
@@ -199,7 +196,10 @@ function renderChart(averagePrice) {
      .attr("text-anchor", "middle")
      .attr("x", width / 2)
      .attr("y", -margin.top / 2)
-     .text("Prosječna cijena po kategoriji proizvoda");
+     .style("font-family", "Libre Baskerville,serif")
+     .style("font-weight", "bold")
+     .style("font-size", "14px")
+     .text("Average price per product category");
 
      // Add y-axis title
      svg.append("text")
@@ -207,8 +207,18 @@ function renderChart(averagePrice) {
      .attr("y", -15 - margin.left / 2)
      .attr("x", 0 - height / 2)
      .attr("dy", "0.35em")
+     .style("font-size", "12px")
+     .style("font-family", "Libre Baskerville,serif")
      .style("text-anchor", "end")
      .text("Price");
+
+     svg.selectAll(".x.axis .tick text")
+    .text(function(d) {
+        return d.toUpperCase();
+    })
+    .style("font-size", "10px")
+   .attr('dy', '15px'); // Move labels down by 15 pixels
+
 
 }
       
