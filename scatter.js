@@ -90,14 +90,14 @@ fetch('cosmetics.json')
 
   function updateScatterplot(filteredData) {
       svg.selectAll("*").remove(); 
-      drawScatterPlot(filteredData); // Create scatterplot with filtered data
+      drawScatterPlot(filteredData); 
   }
 
   function drawScatterPlot(preparedData) {
 
       const colorScale = d3.scaleOrdinal()
       .domain(categoriesColor.map(d => d.name))
-      .range(categoriesColor.map(d=>d.color)); //["#78C6F7", "#008000", "#8367C7", "#800080", "#D4B400", "#949494"]
+      .range(categoriesColor.map(d=>d.color)); 
     
 
     const x = d3.scaleLinear()
@@ -131,10 +131,10 @@ fetch('cosmetics.json')
         .attr("x", width / 2)
         .attr("y", height + margin.bottom)
         .style("fill", "black")
-        .style("font-family", "sans-serif")
+        .style("font-family", "Libre Baskerville,serif")
         .style("font-size", "12px")
         .attr("text-anchor", "middle")
-        .text("Price");
+        .text("Price ($)");
     
     // Add Y-axis label
 
@@ -146,41 +146,9 @@ fetch('cosmetics.json')
     .style("text-anchor", "middle")
     .style("font-size", "12px")
     .style("fill", "black")
-    .style("font-family", "sans-serif")
+    .style("font-family", "Libre Baskerville,serif")
     .text("Rank");
 
-
-  // // Define a function to toggle the visibility of lines
-  //     function toggleDotsVisibility(categoryIndex) {
-  //       const dots = d3.select(`#${categoryIndex}`);
-  //       const currentOpacity = dots.style("opacity");
-  //       dots.style("opacity", currentOpacity === "1" ? "0" : "1");
-
-  //       if (currentOpacity === "1") {
-  //         dots.style("opacity", "0");
-  //         legendItem.classed("crossed-out", true);
-  //     } else {
-  //         dots.style("opacity", "1");
-  //         legendItem.classed("crossed-out", false);
-  //     }
-  //   }
-
-  //   legend_data = [ "Cleanser","Eye cream","Face Mask","Moisturizer", "Sun protect","Treatment" ];
-  
-  //   // Attach event listeners to legend items
-  //   legend_data.forEach((category, index) => {
-  //       d3.select(`#legend .legend-item:nth-child(${index + 1})`).on("click", () => {
-  //           toggleDotsVisibility(category);
-  //       });
-  //   });
-
-  // Function to update color scale when points are filtered
-  
-  
-  // function updateColorScale() {
-  //     const activeLabels = d3.selectAll(".legend-item.active").data().map(d => d.Label);
-  //     colorScale.domain(activeLabels);
-  // }
 
   // Function to update color scale when points are filtered
 function updateColorScale() {
@@ -214,8 +182,7 @@ const tooltip = d3.select("#scatter").append("div")
         .filter(d => d.Label === label)
         .attr("opacity", active ? 1 : 0);
 
-        // Show tooltip on point hover
-    
+        
 });
 circles.on("mouseover", function(d) {
       tooltip.transition()
@@ -230,29 +197,7 @@ circles.on("mouseover", function(d) {
             .duration(500)
             .style("opacity", 0);
     });
-  // d3.selectAll(".legend-item").on("click", function() {
-  //   const label = d3.select(this).attr("data-label");
-  //   const active = d3.select(this).classed("active");
-
-  //   // Toggle the active class
-  //   d3.select(this).classed("active", !active);
-
-  //    // Update the color scale
-  //    updateColorScale();
-
-  //     // Apply color to points based on updated color scale
-  //   circles
-  //   .attr("fill", d => colorScale(d.Label));
-
-  //   // Filter points based on the active status
-  //   circles
-  //       .filter(d => d.Label === label)
-  //       .attr("opacity", active ? 1 : 0);
-
-
-
-  // });
-
+  
 }
 
 })

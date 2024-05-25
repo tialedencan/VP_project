@@ -169,7 +169,7 @@ function renderChart(averagePrice) {
         const productCategory = d[0];
         const productInfo = d[1];
         tooltip.transition().duration(50).style("opacity", 1);
-        tooltip.html(`<strong>${productCategory}: ${Math.round(productInfo.average)}</strong>`)
+        tooltip.html(`<strong>${productCategory}: $${Math.round(productInfo.average)}</strong>`)
         .style("left", (d3.event.pageX + 10) + "px")
         .style("top", (d3.event.pageY - 15) + "px");
       })
@@ -210,7 +210,7 @@ function renderChart(averagePrice) {
      .style("font-size", "12px")
      .style("font-family", "Libre Baskerville,serif")
      .style("text-anchor", "end")
-     .text("Price");
+     .text("Price ($)");
 
      svg.selectAll(".x.axis .tick text")
     .text(function(d) {

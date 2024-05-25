@@ -1,9 +1,9 @@
-h1, h5, label, #selectBtnIng, #selectBtnBrand, #selectBtnSkinType {
+h1, h5, label, #selectBtnIng, #selectBtnBrand, #selectBtnSkinType, .legend-item p {
     font-family: "Libre Baskerville", serif;
     /* font-style: italic; */
 }
 
-#selectBtnIng, #selectBtnBrand, #selectBtnSkinType {
+#selectBtnIng, #selectBtnBrand, #selectBtnSkinType, .legend-item p {
     font-size: 14px;
 }
 
@@ -32,8 +32,8 @@ h1, h5, label, #selectBtnIng, #selectBtnBrand, #selectBtnSkinType {
 }
 
 .legend-rect {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     margin-right: 8px;
 }
 
