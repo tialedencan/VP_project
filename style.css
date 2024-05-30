@@ -40,7 +40,6 @@ h1, h5, label, #selectBtnIng, #selectBtnBrand, #selectBtnSkinType, .legend-item 
 
 .legend-item p {
     margin: 0;
-    /* Remove default margin */
 }
 
 .crossed-out {
